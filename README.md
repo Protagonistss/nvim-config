@@ -106,6 +106,11 @@ require("core.keymaps")
 - **Packer.nvim**: 传统插件管理器
 - **vim-plug**: 轻量级插件管理器
 
+### 1. 下载字体文件
+访问以下链接下载 JetBrains Mono Nerd Font：
+- **官方下载**: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+- **备用链接**: https://www.nerdfonts.com/font-downloads
+
 ## 📚 学习资源
 
 - [Neovim 官方文档](https://neovim.io/doc/)

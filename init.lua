@@ -1,8 +1,8 @@
 -- Bootstrap LazyVim
 require("config.lazy")
 
--- Load LazyVim autocmds
-require("config.autocmds")
+-- Load icon configuration
+require("config.icons")
 
 -- Load your custom configurations
 require("core.options")
