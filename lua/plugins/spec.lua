@@ -25,22 +25,22 @@ return {
         },
         default_component_configs = {
           icon = {
-            folder_closed = icons.get_icon("folder_closed"),
-            folder_open = icons.get_icon("folder_open"),
-            folder_empty = icons.get_icon("folder_empty"),
-            default = icons.get_icon("file"),
+            folder_closed = icons.get_icon("folder_closed", "ui"),
+            folder_open = icons.get_icon("folder_open", "ui"),
+            folder_empty = icons.get_icon("folder_empty", "ui"),
+            default = icons.get_icon("file", "ui"),
           },
           git_status = {
             symbols = {
-              added = icons.get_icon("git_add"),
-              modified = icons.get_icon("git_mod"),
-              deleted = icons.get_icon("git_del"),
-              renamed = icons.get_icon("git_rename"),
-              untracked = icons.get_icon("git_untracked"),
-              ignored = icons.get_icon("git_ignored"),
-              unstaged = icons.get_icon("git_unstaged"),
-              staged = icons.get_icon("git_staged"),
-              conflict = icons.get_icon("git_conflict"),
+              added = icons.get_icon("added", "git"),
+              modified = icons.get_icon("modified", "git"),
+              deleted = icons.get_icon("deleted", "git"),
+              renamed = icons.get_icon("renamed", "git"),
+              untracked = icons.get_icon("untracked", "git"),
+              ignored = icons.get_icon("ignored", "git"),
+              unstaged = icons.get_icon("unstaged", "git"),
+              staged = icons.get_icon("staged", "git"),
+              conflict = icons.get_icon("conflict", "git"),
             },
           },
         },
@@ -56,12 +56,12 @@ return {
       return {
         options = {
           component_separators = { 
-            left = icons.get_icon("separator"), 
-            right = icons.get_icon("separator") 
+            left = icons.get_icon("separator", "ui"), 
+            right = icons.get_icon("separator", "ui") 
           },
           section_separators = { 
-            left = icons.get_icon("section_left"), 
-            right = icons.get_icon("section_right") 
+            left = "", 
+            right = "" 
           },
         },
       }
@@ -75,9 +75,9 @@ return {
       local icons = require("config.icons")
       return {
         icons = {
-          breadcrumb = icons.get_icon("breadcrumb"),
-          separator = icons.get_icon("arrow_right"),
-          group = icons.get_icon("group"),
+          breadcrumb = icons.get_icon("separator", "ui"),
+          separator = icons.get_icon("arrow_right", "ui"),
+          group = "+",
         },
       }
     end,
