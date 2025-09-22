@@ -11,18 +11,18 @@ return {
     },
   },
 
-  -- Neo-tree 文件管理器配置
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    opts = {
-      filesystem = {
-        filtered_items = {
-          hide_dotfiles = false,
-          hide_gitignored = false,
-        },
-      },
-    },
-  },
+  -- Neo-tree 文件管理器配置 默认启用了该插件
+  -- {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   opts = {
+  --     filesystem = {
+  --       filtered_items = {
+  --         hide_dotfiles = false,
+  --         hide_gitignored = false,
+  --       },
+  --     },
+  --   },
+  -- },
 
   -- lualine 状态栏配置
   {
