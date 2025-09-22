@@ -34,3 +34,5 @@ opt.smartcase = true
 opt.termguicolors = true
 opt.signcolumn = "yes"
 
+-- 根路径设置
+vim.g.root_spec = { "cwd" }
