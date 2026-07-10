@@ -1,130 +1,139 @@
 # Neovim 配置
 
-这是一个简洁高效的 Neovim 配置文件，采用模块化设计，易于维护和扩展。
+基于 [LazyVim](https://github.com/LazyVim/LazyVim) 的 Neovim 配置，采用模块化设计，开箱即用，易于维护和扩展。
+
+## 📦 前置依赖
+
+本配置以 LazyVim 为基础，需要以下环境：
+
+| 依赖 | 要求 | 说明 |
+|------|------|------|
+| **Neovim** | ≥ 0.11.2（需 LuaJIT） | LazyVim v15 起的硬性要求 |
+| **Git** | ≥ 2.19.0 | lazy.nvim 的 partial clone 需要 |
+| **Nerd Font** | 推荐 JetBrainsMono Nerd Font | which-key、图标、状态栏均依赖 |
+| **C 编译器** | gcc / clang | treesitter 编译 parser 需要 |
+| **ripgrep (rg)** | 任意版本 | Telescope `live-grep` 等搜索依赖 |
+| **fd** | 任意版本 | Telescope 文件查找（若安装则自动启用） |
+| **Node.js + npm** | Node ≥ 18 | pyright 等多个 LSP 经 Mason 安装需要 |
+
+可选（按需安装）：
+
+- **[neovide](https://github.com/neovide/neovide)**：本配置专门为它设置了字体与光标特效（见 `lua/core/options.lua` 中的 `neovide` 分支）
+- **[lazygit](https://github.com/jesseduffield/lazygit)**：LazyVim 默认通过 `<leader>gg` 集成
+- **Python 工具链**：`pyright` / `ruff`（可由 Mason 自动安装）
 
 ## 📁 目录结构
 
 ```
 nvim/
-├── init.lua              # 主配置文件
-├── lua/
-│   └── core/
-│       └── options.lua   # 基础选项配置
-└── README.md
+├── init.lua                 # 入口：加载 lazy 与 core 各模块
+├── lazy-lock.json           # 插件版本锁定
+├── lazyvim.json             # LazyVim extras 与版本记录
+└── lua/
+    ├── config/
+    │   └── lazy.lua         # lazy.nvim 引导与 LazyVim 注册
+    ├── core/
+    │   ├── options.lua      # 基础选项 + neovide 配置
+    │   ├── keymaps.lua      # 自定义键位
+    │   └── autocmds.lua     # 自定义自动命令
+    └── plugins/
+        └── spec.lua         # 插件配置（主题、状态栏、which-key 等）
 ```
-
-## ✨ 特性
-
-### 基础配置
-- **行号显示**: 相对行号和绝对行号
-- **智能缩进**: 2空格缩进，自动缩进
-- **文本换行**: 禁用自动换行
-- **光标高亮**: 当前行高亮显示
-- **鼠标支持**: 全模式鼠标操作
-
-### 编辑体验
-- **系统剪贴板**: 与系统剪贴板集成
-- **智能搜索**: 忽略大小写，智能匹配
-- **窗口分割**: 新窗口默认在右侧和下方打开
-- **终端颜色**: 支持真彩色显示
 
 ## 🚀 快速开始
 
-### 安装要求
-- Neovim 0.8.0 或更高版本
-- Lua 5.1 或更高版本
+1. **安装前置依赖**
 
-### 安装步骤
+   以 Ubuntu/Debian 为例：
 
-1. **克隆仓库**
+   ```bash
+   # 必装
+   sudo apt install git build-essential ripgrep fd-find nodejs npm
+
+   # Neovim（系统源通常过旧，建议用 AppImage 或官方 PPA）
+   curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+   chmod u+x nvim.appimage && sudo mv nvim.appimage /usr/local/bin/nvim
+   ```
+
+   字体安装见下文 [🎨 字体](#-字体)。
+
+2. **克隆仓库**
+
    ```bash
    git clone https://github.com/Protagonistss/nvim-config.git ~/.config/nvim
    ```
 
-2. **启动 Neovim**
+3. **启动 Neovim**
+
    ```bash
    nvim
    ```
 
-## 📝 配置说明
+   首次启动会自动引导安装 `lazy.nvim` 并拉取所有插件。等待安装完成后重启即可。
 
-### 核心选项 (`lua/core/options.lua`)
+## ⚙️ 配置说明
+
+### `lua/core/options.lua`
+
+基础编辑选项，覆盖 LazyVim 默认值。主要内容：
 
 | 配置项 | 说明 |
 |--------|------|
-| `relativenumber` | 显示相对行号 |
-| `number` | 显示绝对行号 |
-| `tabstop` | Tab 宽度为 2 空格 |
-| `shiftwidth` | 自动缩进宽度为 2 空格 |
-| `expandtab` | 将 Tab 转换为空格 |
+| `relativenumber` / `number` | 相对行号 + 绝对行号 |
+| `tabstop` / `shiftwidth` / `expandtab` | 2 空格缩进，Tab 转空格 |
 | `wrap` | 禁用自动换行 |
 | `cursorline` | 高亮当前行 |
-| `mouse` | 启用鼠标支持 |
-| `clipboard` | 使用系统剪贴板 |
-| `splitright` | 垂直分割时在右侧打开 |
-| `splitbelow` | 水平分割时在下方打开 |
-| `ignorecase` | 搜索时忽略大小写 |
-| `smartcase` | 智能大小写匹配 |
-| `termguicolors` | 启用真彩色支持 |
+| `clipboard` | 与系统剪贴板集成 |
+| `splitright` / `splitbelow` | 新窗口默认开在右、下 |
+| `ignorecase` / `smartcase` | 智能大小写搜索 |
+| `termguicolors` | 真彩色支持 |
+| `root_spec` | 根目录检测策略（当前仅 `cwd`） |
 
-## 🔧 自定义配置
+其中 `neovide` 分支为 neovide GUI 单独配置字体、光标特效与缩放。
 
-### 添加新的配置模块
+### `lua/core/keymaps.lua`
 
-1. 在 `lua/core/` 目录下创建新的 Lua 文件
-2. 在 `init.lua` 中引入新模块：
-   ```lua
-   require("core.your_module")
-   ```
+自定义键位，leader 键为 `空格`：
 
-### 示例：添加键位映射
+| 键位 | 模式 | 说明 |
+|------|------|------|
+| `jk` | 插入 | 退回正常模式 |
+| `J` / `K` | 可视 | 上下移动选中行 |
+| `<leader>sv` | 正常 | 垂直分屏 |
+| `<leader>sh` | 正常 | 水平分屏 |
+| `<leader>nh` | 正常 | 清除搜索高亮 |
 
-创建 `lua/core/keymaps.lua`：
-```lua
-local keymap = vim.keymap
+其余快捷键继承 LazyVim 默认（可用 `空格` 唤出 which-key 查看全部）。
 
--- 设置 leader 键
-vim.g.mapleader = " "
+### `lua/plugins/spec.lua`
 
--- 保存文件
-keymap.set("n", "<leader>w", ":w<CR>", { desc = "保存文件" })
+自定义插件配置（在 LazyVim 之上）：
 
--- 退出
-keymap.set("n", "<leader>q", ":q<CR>", { desc = "退出" })
-```
+- **tokyonight.nvim** — 主题，使用 `storm` 风格
+- **lualine.nvim** — 状态栏
+- **which-key.nvim** — 快捷键提示
 
-然后在 `init.lua` 中添加：
-```lua
-require("core.keymaps")
-```
+## 🎨 字体
 
-## 🎨 主题和插件
+需要安装 [JetBrainsMono Nerd Font](https://www.nerdfonts.com/font-downloads)：
 
-当前配置为纯 Lua 实现，不依赖任何插件管理器。如需添加主题或插件，建议使用：
+- 官方下载：<https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip>
 
-- **Lazy.nvim**: 现代插件管理器
-- **Packer.nvim**: 传统插件管理器
-- **vim-plug**: 轻量级插件管理器
+安装后将终端字体设为 `JetBrainsMono Nerd Font Mono`。neovide 会自动读取 `options.lua` 中配置的 `JetBrainsMono Nerd Font Mono:h18`。
 
-### 1. 下载字体文件
-访问以下链接下载 JetBrains Mono Nerd Font：
-- **官方下载**: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
-- **备用链接**: https://www.nerdfonts.com/font-downloads
+## 🔧 扩展配置
+
+- **加新插件 / 覆盖 LazyVim 配置**：在 `lua/plugins/` 下新增文件（如 `lua/plugins/my.lua`），通过 `{ import = "plugins" }` 自动加载。
+- **启用语言扩展（extras）**：运行 `:LazyExtras` 或编辑 `lazyvim.json` 的 `extras` 数组来启用所需语言。例如 `lazyvim.plugins.extras.lang.python` 提供 pyright 类型检查 + ruff lint/format。⚠️ 注意：启用该 extra 时 Mason 会自动装 ruff，需要系统已安装 `python3-venv` 与 `python3-pip`（Ubuntu/Debian 默认不带），否则安装会以 `spawn: python3 failed` 失败。
+- **加自定义选项 / 键位**：编辑 `lua/core/options.lua` 与 `lua/core/keymaps.lua`。
 
 ## 📚 学习资源
 
+- [LazyVim 文档](https://lazyvim.org/)
+- [lazy.nvim 文档](https://lazyvim.org/installation)
 - [Neovim 官方文档](https://neovim.io/doc/)
 - [Lua 配置指南](https://neovim.io/doc/user/lua-guide.html)
-- [Vim 用户手册](https://neovim.io/doc/user/usr_toc.html)
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request 来改进这个配置！
 
 ## 📄 许可证
 
 MIT License
-
----
-
-**注意**: 这是一个基础配置，适合 Neovim 初学者和喜欢简洁配置的用户。如需更高级的功能，建议参考其他成熟的 Neovim 配置项目。
