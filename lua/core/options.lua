@@ -1,6 +1,6 @@
 -- Add neovide if exist
 if vim.g.neovide then
-	vim.o.guifont = "JetBrainsMono Nerd Font:h18"
+	vim.o.guifont = "JetBrainsMono Nerd Font Mono:h18"
 	vim.g.neovide_cursor_vfx_mode = "railgun"
 	vim.g.neovide_scale_factor = 0.66
 	-- turn off animate because we are using neovide
@@ -42,6 +42,3 @@ opt.smartcase = true
 -- 外观
 opt.termguicolors = true
 opt.signcolumn = "yes"
-
--- 根路径设置
-vim.g.root_spec = { "cwd" }
